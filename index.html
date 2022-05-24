@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLC Email Template Builder</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="emoji.js"></script>
+</head>
+<body>
+<div class="page">
+  <h1 style="text-align:center">CLC Email Template Builder</h1>
+  <div class="header"></div>
+  <div class="main">
+    <div class="left">
+      <form id="email">
+        <label for="email-snippet" class="form-label"></label>
+        <div class="input-group"> <span class="input-group-text" id="snippet-field">Mailer Snippet</span>
+          <input type="text" class="form-control" id="email-snippet" aria-describedby="snippet-field">
+        </div>
+        <label for="email-banner" class="form-label"></label>
+        <div class="input-group"> <span class="input-group-text" id="banner-field">Banner URL</span>
+          <input type="text" class="form-control" id="email-banner" aria-describedby="banner-field">
+        </div>
+        <label for="email-button-text" class="form-label"></label>
+        <div class="input-group"> <span class="input-group-text" id="button-field">Button Text</span>
+          <input type="text" class="form-control" id="email-button-text" aria-describedby="button-field">
+        </div>
+        <label for="email-url" class="form-label"></label>
+        <div class="input-group"> <span class="input-group-text" id="url-field">Link</span>
+          <input type="text" class="form-control" id="email-url" aria-describedby="url-field">
+        </div>
+        <div >
+          <textarea class="form-control" id="email-body" rows="12" placeholder="Markdown intructions
+    **bold text**
+    *italicized text*
+    Ordered List	
+        1. First item
+        2. Second item
+        3. Third item
+    {Emoji}
+    [title](https://www.example.com)
+    ![alt text](image.jpg)" ></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" id="email-update">Update</button>
+        <a href="https://ashleighy.github.io/emoji.js/" >Supported Emojis</a>
+      </form>
+    </div>
+    <div class="right">
+      <div class="container" id="email-render">
+        <!-- Content here -->
+      </div>
+      <button type="button" class="btn btn-primary" id="email-export">Export to clipboard</button>
+    </div>
+  </div>
+</div>
+<style>      
+       textarea{
+           margin: 3% 0 3% 0;
+       }
+       textarea,
+       input{
+            background: mintcream !important;
+       }
+      form a{
+          margin-left: 50%;
+      }
+       .page > h1{
+           padding-left: 5%;
+       }
+       .main{
+            display: flex;
+            flex-direction: row;
+        }
+        .main > div{
+            width: 40%;
+            padding-left: 5%;
+        }
+        #email-render{
+            overflow-y: scroll;
+            max-height: 501px;
+            min-width: 644px;
+            margin-bottom: 2%;
+        }     
+    </style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+<script>
+        function templateCLC(snippet, imageUrl, buttonText, url, content){
+            return `
+            <table width="100%" bgcolor="#f3f5f6" align="center" border="0" cellpadding="0" cellspacing="0">
+			  <tbody>
+			  <tr>
+				<td align="center" style="border:none;padding:0">
+				<table width="100%" bgcolor="#f3f5f6" align="center" border="0" cellpadding="0" cellspacing="0" style="max-width:600px;">
+					<tbody><tr align="center" bgcolor="#000000" style="max-width:600px;display:block;margin:auto;">
+					  <td style="line-height:0px;"><a href="${ url ? url : ''}" style="padding:0px;margin:0px;display:block;overflow:hidden;"><img alt="${snippet ? snippet : ''}" src="https://i.ibb.co/wRSXQCM/clc-mailer-header.png" style="width:100%;" border="0"></a> </td>
+					</tr>
+					<tr align="center" bgcolor="#000000" style="max-width:600px;display:block;margin:auto;">
+					  <td style="line-height:0px;"><a href="${ url ? url : ''}" style="padding:0px;margin:0px 0 20px;display:block;overflow:hidden;">
+						<img src="${ imageUrl ? imageUrl : ''}" alt="main-banner" style="width:100%;" border="0"></a> </td>
+					</tr>
+					<tr align="left" bgcolor="#000000" style="max-width:600px;">
+					  <td bgcolor="#000000" style="display:block;padding:0px 30px;">
+						${content ? content : ''}
+						</td>
+					</tr>
+					<tr align="center" bgcolor="#000000" style="max-width:600px;display:block;margin:auto;">
+					  <td style="padding:0px 0px 25px;">
+						  <a href="${ url ? url : ''}" target="_blank" style="font-size:25px;font-weight:500;font-family:sans-serif;color:#ffffff;text-decoration:none;padding:10px 30px;display:inline-block;background:#2fc42f;border-radius: 20px;">${ buttonText ? buttonText : 'Claim Bonus'}</a> 
+					  </td>
+					</tr>
+			
+					<tr align="center" bgcolor="#000000" style="max-width:600px;display:block;margin:auto;">
+					  <td bgcolor="#000000" valign="middle" style="padding: 0px 0px 0px;font-family:Poppins,sans-serif;color:#393939;text-align:center;line-height:0px;">
+						<a href="${ url ? url : ''}" style="display:inline-block;" target="_blank">
+							<img src="https://i.ibb.co/ys5065G/clc-footer-payment-icon.png">
+						</a>
+						<a href="${ url ? url : ''}" style="display:inline-block;" target="_blank">
+							<img src="https://i.ibb.co/pbYhBtZ/support.jpg">
+						</a>
+						<p style="font-family:Poppins,sans-serif;font-size:14px;line-height:20px;font-weight:400;color:#777575;padding:0px 30px 10px;margin:0px;"> </p></td>
+					</tr>
+					<tr align="center" bgcolor="#000000" style="max-width:600px;display:block;margin:auto;">
+					  <td bgcolor="#000000" valign="middle" style="padding: 0px 0px 0px;font-family:Poppins,sans-serif;color:#393939;text-align:center;line-height:0px;">
+							<p style="color:#67757d;font-family:Poppins,sans-serif;font-size:12px;line-height:16px;font-weight:300;text-align:center;margin:0" align="center">
+								<a href="${ url ? url : ''}" style="color:#67757d;font-family:Poppins,sans-serif;font-size:12px;line-height:16px;font-weight:300;text-decoration:none" target="_blank">CrazyLuckCasino always supports responsible gambling.</a>
+							</p>
+							<a href="${ url ? url : ''}" style="" target="_blank"> 
+								<img src="https://i.ibb.co/jVhNYVN/18plus.png" border="0" style="display:block;height:auto;width:30px;margin:20px auto 20px" tabindex="0">
+							</a>
+						</td>
+					</tr>
+				  </tbody></table></td>
+			  </tr>
+			</tbody></table>
+            `
+        }
+        const init = () => {
+            const renderer = document.getElementById('email-render')
+            renderer.innerHTML = templateCLC();
+        }
+		const emoji = () => {			
+			var re = $.map(f, function(v,i) {
+				return new RegExp(v, 'g');
+			});
+			
+			$('p').html(function(i,text) {
+				$.each(f,function(i,v) {
+					text = text.replace(re[i],"<img style='vertical-align: middle; height: 24px; width: 24px;' src='https://lp.crazyluckcasino.com/clc-template-builder/img/emoji/"+ r[i] +".png'>"); //edit img src here to match where you placed your emoji folder
+				});
+				return text;  
+			});			
+		}
+		
+        const update = () => {
+            const renderer = document.getElementById('email-render');
+            // const data = new FormData(document.getElementById('email'));
+            // console.log(data.getAll('email-body'))
+            const snippet = document.forms['email'].elements['email-snippet'].value;
+			const imageUrl = document.forms['email'].elements['email-banner'].value;
+            const buttonText = document.forms['email'].elements['email-button-text'].value;
+			const url = document.forms['email'].elements['email-url'].value;
+            const body = document.forms['email'].elements['email-body'].value;
+            const converter = new showdown.Converter();
+            converter.setOption('emoji', true)
+            const htm = converter.makeHtml(body);
+			
+            const prettified = htm.replaceAll('<p', '<p style="font-family:Poppins,sans-serif;font-size:22px;font-weight:400;color:#ffffff;"').replaceAll('<strong', '<strong style="font-weight:bold;color:#2fc42f;"').replaceAll('$', '!currency_symbol');
+            //console.log(prettified)
+            renderer.innerHTML = templateCLC(snippet, imageUrl, buttonText, url, prettified);
+			emoji();
+						
+        }
+
+        const copyToClipBoard = () => {
+            navigator.clipboard.writeText(document.getElementById('email-render').innerHTML).then(function() {
+                alert('Template Copied!');
+                }, function(err) {
+                console.error('Async: Could not copy text: ', err);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', ()=>{
+            const updateButton = document.getElementById('email-update');
+            const clipBoardButton = document.getElementById('email-export')
+            updateButton.addEventListener('click', update)
+            clipBoardButton.addEventListener('click', copyToClipBoard)                       
+            init();
+        })
+
+    </script>
+</body>
+</html>
